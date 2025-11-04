@@ -3,20 +3,20 @@ using WarehouseInventory.Domain.Entities;
 
 namespace WarehouseInventory.Infrastructure;
 
-public class InventoryDbContext : DbContext
+public class InventoryReadDbContext : DbContext
 {
-    public DbSet<InventoryItemEntity> Items { get; set; }
-    public DbSet<OutboxMessageEntity> OutboxMessages { get; set; }
+    public DbSet<InventoryItemReadEntity> Items { get; set; }
+    public DbSet<StockMovementReadEntity> Movements { get; set; }
 
-    public InventoryDbContext(DbContextOptions<InventoryDbContext> options)
+    public InventoryReadDbContext(DbContextOptions<InventoryReadDbContext> options)
         : base(options)
     {
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<InventoryItemEntity>(b =>
+        modelBuilder.Entity<InventoryItemReadEntity>(b =>
         {
-            b.ToTable("inventory_item");
+            b.ToTable("inventory_item_read");
 
             b.HasKey(p => p.Sku);
 
@@ -35,9 +35,9 @@ public class InventoryDbContext : DbContext
                 .IsRequired();
         });
 
-        modelBuilder.Entity<OutboxMessageEntity>(b =>
+        modelBuilder.Entity<StockMovementReadEntity>(b =>
         {
-            b.ToTable("outbox_message");
+            b.ToTable("stock_movement_read");
 
             b.HasKey(p => p.Id);
 
@@ -45,22 +45,26 @@ public class InventoryDbContext : DbContext
                 .HasColumnName("id")
                 .IsRequired();
 
-            b.Property(p => p.DateTime)
-                .HasColumnName("datetime")
-                .IsRequired();
+            b.Property(p => p.Sku)
+                .HasColumnName("sku")
+                .IsRequired()
+                .HasMaxLength(50);
 
             b.Property(p => p.Type)
                 .HasColumnName("type")
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(100);
 
-            b.Property(p => p.Content)
-                .HasColumnName("content")
+            b.Property(p => p.OccurredAt)
+                .HasColumnName("occurred_at")
                 .IsRequired()
                 .HasMaxLength(2000);
 
-            b.Property(p => p.ProcessedAt)
-                .HasColumnName("processed_at");
+            b.Property(p => p.Quantity)
+                .HasColumnName("quantity");
+
+            b.Property(p => p.NewQuantity)
+                .HasColumnName("new_quantity");
         });
     }
 }

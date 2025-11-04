@@ -26,4 +26,42 @@
             Quantity -= qty;
         }
     }
+
+    public class OutboxItem
+    {
+        public Guid Id { get; set; }
+        public DateTime DateTime { get; set; }
+        public string Type { get; set; } = default!;
+        public string Content { get; set; } = default!; // JSON
+        public DateTime? ProcessedAt { get; set; }
+
+        public OutboxItem(Guid id, DateTime dateTime, string type, string content, DateTime? processedAt)
+        {
+            Id = id;
+            DateTime = dateTime;
+            Type = type;
+            Content = content;
+            ProcessedAt = processedAt;
+        }
+    }
+
+    public class StockMovement
+    {
+        public string Sku { get; set; } = default!;
+        public DateTime OccurredAt { get; set; }
+        public int Quantity { get; set; }
+        public int NewQuantity { get; set; }
+        public string Type { get; set; }
+
+        public StockMovement(string sku, DateTime occurredAt, string type, int quantity, int newQuantity)
+        {
+            Sku = sku;
+            OccurredAt = occurredAt;
+            Type = type;
+            Quantity = quantity;
+            NewQuantity = newQuantity;
+        }
+
+        public override string ToString() => $"{Sku}: {Type}{Quantity} @ {OccurredAt.ToString("G")}";
+    }
 }
