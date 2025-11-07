@@ -23,12 +23,8 @@ namespace WarehouseInventory.Infrastructure.Repositories
                 Quantity = 0
             };
             _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-        }
 
-        public async Task<IEnumerable<InventoryItem>> GetAllInventoryItemsAsync()
-        {
-            return (await _context.Items.ToListAsync()).Select(i => new InventoryItem(i.Sku, i.Name, i.Quantity)).ToList();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<InventoryItem?> GetBySkuAsync(string sku)

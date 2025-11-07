@@ -1,9 +1,10 @@
+using WarehouseInventory.Application.Handlers;
 using WarehouseInventory.Domain.Aggregates;
 using WarehouseInventory.Domain.Repositories;
 
 namespace WarehouseInventory.Application.Queries.Handlers;
 
-public class GetInventoryItemHandler
+public class GetInventoryItemHandler : IQueryHandler<GetInventoryItemQuery, InventoryItem?>
 {
     private readonly IInventoryRepository _repo;
 
