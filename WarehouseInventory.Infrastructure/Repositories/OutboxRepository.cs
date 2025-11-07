@@ -29,13 +29,26 @@ namespace WarehouseInventory.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddAsync(StockAdjusted evt)
+        public async Task AddAsync(StockAdded evt)
         {
             var outbox = new OutboxMessageEntity
             {
                 Id = Guid.NewGuid(),
                 DateTime = evt.OccurredAt,
-                Type = nameof(StockAdjusted),
+                Type = nameof(StockAdded),
+                Content = JsonSerializer.Serialize(evt)
+            };
+            _context.OutboxMessages.Add(outbox);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddAsync(StockRemoved evt)
+        {
+            var outbox = new OutboxMessageEntity
+            {
+                Id = Guid.NewGuid(),
+                DateTime = evt.OccurredAt,
+                Type = nameof(StockRemoved),
                 Content = JsonSerializer.Serialize(evt)
             };
             _context.OutboxMessages.Add(outbox);

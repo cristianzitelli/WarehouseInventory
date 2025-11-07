@@ -65,6 +65,14 @@ public class InventoryReadDbContext : DbContext
 
             b.Property(p => p.NewQuantity)
                 .HasColumnName("new_quantity");
+
+            b.HasDiscriminator<string>(p => p.Type)
+            .HasValue<StockAddedReadEntity>(Domain.Enums.StockMovement.Ingoing.ToString())
+            .HasValue<StockRemovedReadEntity>(Domain.Enums.StockMovement.Outgoing.ToString());
         });
+
+        modelBuilder.Entity<StockAddedReadEntity>().HasBaseType<StockMovementReadEntity>();
+        modelBuilder.Entity<StockRemovedReadEntity>().HasBaseType<StockMovementReadEntity>();
+
     }
 }

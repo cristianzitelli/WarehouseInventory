@@ -6,9 +6,9 @@ namespace WarehouseInventory.Application.Queries.Handlers;
 
 public class GetStockMovementsHandler : IQueryHandler<GetStockMovementsQuery, IEnumerable<StockMovement>>
 {
-    private readonly IInventoryReadRepository _repo;
+    private readonly IStockMovementReadRepository _repo;
 
-    public GetStockMovementsHandler(IInventoryReadRepository repo)
+    public GetStockMovementsHandler(IStockMovementReadRepository repo)
     {
         _repo = repo;
     }

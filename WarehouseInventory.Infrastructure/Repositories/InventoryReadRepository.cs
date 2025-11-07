@@ -44,22 +44,6 @@ namespace WarehouseInventory.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddAsync(StockAdjusted evt)
-        {
-            var movement = new StockMovementReadEntity
-            {
-                Id = Guid.NewGuid(),
-                Sku = evt.Sku,
-                Type = evt.MovementType,
-                Quantity = evt.Quantity,
-                NewQuantity = evt.NewQuantity,
-                OccurredAt = evt.OccurredAt
-            };
-            _context.Movements.Add(movement);
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task UpdateAsync(InventoryItem inventoryItem)
         {
             var item = await _context.Items.FindAsync(inventoryItem.Sku)
@@ -68,14 +52,6 @@ namespace WarehouseInventory.Infrastructure.Repositories
             _context.Items.Update(item);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<StockMovementReadEntity?> GetMovementByIdAsync(Guid id) 
-            => await _context.Movements.FindAsync(id);
-
-        public async Task<IEnumerable<StockMovement>> GetAllMovementsAsync()
-            => await _context.Movements
-                .Select(i => new StockMovement(i.Sku, i.OccurredAt, i.Type, i.Quantity, i.NewQuantity))
-                .ToListAsync();
 
     }
 }

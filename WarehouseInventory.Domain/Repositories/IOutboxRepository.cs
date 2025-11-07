@@ -8,7 +8,8 @@ namespace WarehouseInventory.Domain.Repositories
         Task<OutboxItem?> GetByIdAsync(Guid guid);
         Task<IEnumerable<OutboxItem>> GetUnprocessedAsync(CancellationToken stoppingToken);
         Task AddAsync(InventoryItemCreated evt);
-        Task AddAsync(StockAdjusted evt);
+        Task AddAsync(StockAdded evt);
+        Task AddAsync(StockRemoved evt);
         Task MarkProcessed(Guid guid);
     }
 }

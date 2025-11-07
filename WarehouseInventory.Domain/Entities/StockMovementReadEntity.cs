@@ -7,5 +7,13 @@ public class StockMovementReadEntity
     public DateTime OccurredAt { get; set; }
     public int Quantity { get; set; }
     public int NewQuantity { get; set; }
-    public required string Type { get; set; }
+    public string Type { get; set; }
+}
+
+public class StockAddedReadEntity : StockMovementReadEntity
+{
+}
+
+public class StockRemovedReadEntity : StockMovementReadEntity
+{
 }

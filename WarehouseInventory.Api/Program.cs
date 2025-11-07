@@ -46,9 +46,11 @@ builder.Services.AddScoped<ICommandHandler<RegisterIngoingStockCommand>, Registe
 builder.Services.AddScoped<ICommandHandler<RegisterOutgoingStockCommand>, RegisterOutgoingStockHandler>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryReadRepository, InventoryReadRepository>();
+builder.Services.AddScoped<IStockMovementReadRepository, StockMovementReadRepository>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
 builder.Services.AddScoped<IEventHandler<InventoryItemCreated>, InventoryItemCreatedReadHandler>();
-builder.Services.AddScoped<IEventHandler<StockAdjusted>, StockMovementCreatedReadHandler>();
+builder.Services.AddScoped<IEventHandler<StockAdded>, StockAddedReadHandler>();
+builder.Services.AddScoped<IEventHandler<StockRemoved>, StockRemovedReadHandler>();
 builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
 
 builder.Services.AddHostedService<OutboxDispatcher>();

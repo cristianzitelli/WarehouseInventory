@@ -24,7 +24,7 @@ public class RegisterOutgoingStockHandler : ICommandHandler<RegisterOutgoingStoc
 
         await _inventoryRepo.UpdateAsync(item);
 
-        await _outboxRepo.AddAsync(new StockAdjusted(Guid.NewGuid(), command.Sku, command.Quantity, "-", DateTime.UtcNow, item.Quantity));
+        await _outboxRepo.AddAsync(new StockRemoved(Guid.NewGuid(), command.Sku, command.Quantity, DateTime.UtcNow, item.Quantity));
     }
 }
 

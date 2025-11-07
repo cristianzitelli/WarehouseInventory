@@ -9,12 +9,14 @@ namespace WarehouseInventory.Application.Dispatchers
     public class EventDispatcher : IEventDispatcher
     {
         private readonly IEventHandler<InventoryItemCreated> _inventoryItemCreatedEventHandler;
-        private readonly IEventHandler<StockAdjusted> _stockAdjustedEventHandler;
+        private readonly IEventHandler<StockAdded> _stockAddedEventHandler;
+        private readonly IEventHandler<StockRemoved> _stockRemovedEventHandler;
 
-        public EventDispatcher(IEventHandler<InventoryItemCreated> inventoryItemCreatedEventHandler, IEventHandler<StockAdjusted> stockAdjustedEventHandler)
+        public EventDispatcher(IEventHandler<InventoryItemCreated> inventoryItemCreatedEventHandler, IEventHandler<StockAdded> stockAddedEventHandler, IEventHandler<StockRemoved> stockRemovedEventHandler)
         {
             _inventoryItemCreatedEventHandler = inventoryItemCreatedEventHandler;
-            _stockAdjustedEventHandler = stockAdjustedEventHandler;
+            _stockAddedEventHandler = stockAddedEventHandler;
+            _stockRemovedEventHandler = stockRemovedEventHandler;
         }
 
         public async Task DispatchAsync(OutboxItem evtMessage, CancellationToken cancellationToken = default)
@@ -22,10 +24,13 @@ namespace WarehouseInventory.Application.Dispatchers
             switch (evtMessage.Type)
             {
                 case nameof(InventoryItemCreated):
-                    await _inventoryItemCreatedEventHandler.HandleAsync(JsonSerializer.Deserialize<InventoryItemCreated>(evtMessage.Content), cancellationToken);
+                    await _inventoryItemCreatedEventHandler.HandleAsync(evtMessage.GetDeserializedContent<InventoryItemCreated>(), cancellationToken);
                     break;
-                case nameof(StockAdjusted):
-                    await _stockAdjustedEventHandler.HandleAsync(JsonSerializer.Deserialize<StockAdjusted>(evtMessage.Content), cancellationToken);
+                case nameof(StockAdded):
+                    await _stockAddedEventHandler.HandleAsync(evtMessage.GetDeserializedContent<StockAdded>(), cancellationToken);
+                    break;
+                case nameof(StockRemoved):
+                    await _stockRemovedEventHandler.HandleAsync(evtMessage.GetDeserializedContent<StockRemoved>(), cancellationToken);
                     break;
                 default:
                     throw new InvalidCastException("The event could not be deserialized");

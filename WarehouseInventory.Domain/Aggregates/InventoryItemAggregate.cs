@@ -1,4 +1,7 @@
-﻿namespace WarehouseInventory.Domain.Aggregates
+﻿using System.Text.Json;
+using WarehouseInventory.Domain.Events;
+
+namespace WarehouseInventory.Domain.Aggregates
 {
     public class InventoryItem
     {
@@ -35,6 +38,8 @@
         public string Content { get; set; } = default!; // JSON
         public DateTime? ProcessedAt { get; set; }
 
+        public T GetDeserializedContent<T>() where T: BaseEvent => JsonSerializer.Deserialize<T>(Content) ;
+
         public OutboxItem(Guid id, DateTime dateTime, string type, string content, DateTime? processedAt)
         {
             Id = id;
@@ -62,6 +67,6 @@
             NewQuantity = newQuantity;
         }
 
-        public override string ToString() => $"{Sku}: {Type}{Quantity} @ {OccurredAt.ToString("G")}";
+        public override string ToString() => $"{Sku}: {(Type.Equals(Domain.Enums.StockMovement.Ingoing.ToString()) ? "+" : "-")}{Quantity} @ {OccurredAt.ToString("G")}";
     }
 }

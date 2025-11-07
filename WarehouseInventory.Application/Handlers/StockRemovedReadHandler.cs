@@ -4,18 +4,20 @@ using WarehouseInventory.Domain.Repositories;
 
 namespace WarehouseInventory.Application.Handlers
 {
-    public class StockMovementCreatedReadHandler : IEventHandler<StockAdjusted>
+    public class StockRemovedReadHandler : IEventHandler<StockRemoved>
     {
         private readonly IInventoryReadRepository _inventoryReadRepository;
+        private readonly IStockMovementReadRepository _stockMovementReadRepository;
 
-        public StockMovementCreatedReadHandler(IInventoryReadRepository inventoryReadRepository)
+        public StockRemovedReadHandler(IInventoryReadRepository inventoryReadRepository, IStockMovementReadRepository stockMovementReadRepository)
         {
             _inventoryReadRepository = inventoryReadRepository;
+            _stockMovementReadRepository = stockMovementReadRepository;
         }
 
-        public async Task HandleAsync(StockAdjusted evt, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(StockRemoved evt, CancellationToken cancellationToken = default)
         {
-            var exists = await _inventoryReadRepository.GetMovementByIdAsync(evt.Id);
+            var exists = await _stockMovementReadRepository.GetMovementByIdAsync(evt.Id);
             if (exists != null)
                 return; 
 
@@ -27,7 +29,7 @@ namespace WarehouseInventory.Application.Handlers
 
             await _inventoryReadRepository.UpdateAsync(item);
 
-            await _inventoryReadRepository.AddAsync(evt);
+            await _stockMovementReadRepository.AddAsync(evt);
         }
 
     }
